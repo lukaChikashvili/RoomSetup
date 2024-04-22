@@ -3,9 +3,9 @@ import { Html, OrbitControls } from '@react-three/drei'
 import { useLoader } from '@react-three/fiber'
 import { TextureLoader } from 'three'
 
-const Main = () => {
+const Main = ({textureSource}) => {
   
-    const tiles = useLoader(TextureLoader, './floor1.jpg');
+    const tiles = useLoader(TextureLoader, textureSource);
 
 
 
