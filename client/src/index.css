@@ -33,3 +33,24 @@
    color: black;
    
 }
+
+.textures {
+  position: absolute;
+  top: 100px;
+  display: flex;
+  gap: 3rem;
+  z-index: 100;
+}
+
+.textures img {
+  width: 150px;
+  border-radius: 3px;
+  box-shadow: 4px 4px 5px  rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: all 0.9s cubic-bezier(0.39, 0.575, 0.565, 1);
+
+}
+
+.textures img:hover {
+  opacity: 80%;
+}
