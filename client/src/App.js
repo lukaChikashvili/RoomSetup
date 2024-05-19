@@ -7,11 +7,12 @@ function App() {
 
   const [selectedTexture, setSelectedTexture] = useState('./floor1.jpg');
   const [selectedTable, setSelectedTable] = useState('./table.glb');
+  const [selectedSofa, setSelectedSofa] = useState('./sofa.glb');
   return (
     <div className="App">
-     <Header onTextureChange={setSelectedTexture} onModelChange={setSelectedTable} />
+     <Header onTextureChange={setSelectedTexture} onModelChange={setSelectedTable} onSofaChange={setSelectedSofa}/>
        <Canvas>
-          <Main textureSource={selectedTexture} modelSource={selectedTable} />
+          <Main textureSource={selectedTexture} modelSource={selectedTable} sofaSource={selectedSofa}/>
        </Canvas>
     </div>
   );

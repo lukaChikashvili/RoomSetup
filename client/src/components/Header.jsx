@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 
 
-const Header = ({ onTextureChange, onModelChange }) => {
+const Header = ({ onTextureChange, onModelChange, onSofaChange }) => {
     const [floor, setFloor] = useState(false);
     const [table, setTable] = useState(false);
+    const [sofa, setSofa] = useState(false);
 
   return (
     <div className='header'>
-       <button onClick={() => {setFloor(!floor); setTable(false)}}>იატაკი</button>
-       <button onClick={() => {setTable(!table); setFloor(false)}}>მაგიდა</button>
+       <button onClick={() => {setFloor(!floor); setTable(false); setSofa(false)}}>იატაკი</button>
+       <button onClick={() => {setTable(!table); setFloor(false); setSofa(false)}}>მაგიდა</button>
+       <button onClick={() => {setSofa(!sofa); setFloor(false); setTable(false)}}>ტახტი</button>
        
   {floor && 
 
@@ -29,6 +31,14 @@ const Header = ({ onTextureChange, onModelChange }) => {
   <img src = {'./table3.png'}  onClick={() => onModelChange('./Desk2.glb')} />
  
 </div>
+}
+
+{
+  sofa && 
+  <div className='tables'>
+    <img src = "./sofa1.png" onClick={() => onSofaChange('./sofa.glb')} />
+    <img src = "./sofa2.png" onClick={() => onSofaChange('./sofa2.glb')} />
+    </div>
 }
 
 

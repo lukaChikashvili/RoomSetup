@@ -1,52 +1,53 @@
 import React, { useState } from 'react'
 import {  Html, OrbitControls, useGLTF } from '@react-three/drei'
 import { useLoader } from '@react-three/fiber'
-import { MeshStandardMaterial, TextureLoader } from 'three'
+import {  TextureLoader } from 'three'
 
-const Main = ({textureSource, modelSource}) => {
+const Main = ({textureSource, modelSource, sofaSource}) => {
   
     const tiles = useLoader(TextureLoader, textureSource);
 
     const model = useGLTF(modelSource);
+    const sofa = useGLTF(sofaSource);
 
-    const [setting, setSetting] = useState(false);
-    const [size, setSize] = useState(1);
-    const [xPosition, setXPosition] = useState(0);
-    const [yPosition, setYPosition] = useState(0);
+    const [modelSettings, setModelSettings] = useState({
+      modelName: null,
+      size: 1,
+      xPosition: 0,
+      yPosition: 0,
+  });
 
-    const handleMesh = () => {
-      setSetting(true);
-    }
+  
 
-    const handleSize = (event) => {
-      const newSize = parseFloat(event.target.value);
-      if (!isNaN(newSize)) {
-          setSize(newSize);
-      }
-  }
+  
+  const handleMesh = (modelName) => {
+    setModelSettings((prevSettings) => ({
+        ...prevSettings,
+        modelName: prevSettings.modelName === modelName ? prevSettings.modelName : modelName,
+    }));
+};
 
-  const handlePosition = (event) => {
-    const newSize = parseFloat(event.target.value);
-      if (!isNaN(newSize)) {
-          setXPosition(newSize);
-      }
 
-      if(newSize === 5 || newSize === -5) {
-        setXPosition(0);
-      }
-  }
-
-  const handleYPosition = (event) => {
+  const handleSize = (event) => {
     const newSize = parseFloat(event.target.value);
     if (!isNaN(newSize)) {
-        setYPosition(newSize);
+        setModelSettings({
+            ...modelSettings,
+            size: newSize,
+        });
     }
+};
 
-    if(newSize === 5 || newSize === -5) {
-      setYPosition(0);
-    }
+const handlePosition = (axis, value) => {
+  const newPosition = parseFloat(value);
+  if (!isNaN(newPosition)) {
+      setModelSettings({
+          ...modelSettings,
+          [`${axis}Position`]: newPosition,
+      });
   }
-
+};
+ 
 
   return (
     <>
@@ -64,33 +65,43 @@ const Main = ({textureSource, modelSource}) => {
        
         <primitive object={model.scene} 
                    position-y = {-1}
-                   onClick = {handleMesh}
-                   scale = {size} 
-                   position-x = {xPosition}
-                   position-z = {-yPosition}
+                   onClick = {() => handleMesh('model')}
+                   scale={modelSettings.modelName === 'model' ? modelSettings.size : 1}
+                   position-x={modelSettings.modelName === 'model' ? modelSettings.xPosition : 0}
+                   position-z={modelSettings.modelName === 'model' ? -modelSettings.yPosition : 0}
+                   
                     />
 
-        {setting && <Html position={-2}>
+        <primitive object={sofa.scene}
+                   scale={modelSettings.modelName === 'sofa' ? modelSettings.size : 3}
+                   position-x={modelSettings.modelName === 'sofa' ? modelSettings.xPosition : 0}
+                   position-z={modelSettings.modelName === 'sofa' ? -modelSettings.yPosition : 3}
+                   position-y = {-0.5}
+                   onClick = {() => handleMesh('sofa')}
+                   
+                   />
+
+        {modelSettings.modelName && <Html position={-2}>
              <div className='settings'>
                 <p>პარამეტრები</p>
-                <span onClick={() => setSetting(false)}>X</span>
+                <span onClick={() => handleMesh(modelSettings.modelName)}>X</span>
                 <div className='label'>
                  <label>ზომა</label>
-                 <input type='number' value = {size} onChange={handleSize}/>
+                 <input type='number' value = {modelSettings.size} onChange={handleSize}/>
                  </div>
 
                  <div className='label'>
                  <label>პოზიცია X: </label>
-                 <input type='number' value = {xPosition} onChange={handlePosition}/>
+                 <input type='number'  value={modelSettings.xPosition} onChange={(e) => handlePosition('x', e.target.value)}/>
                  </div>
 
                  <div className='label'>
                  <label>პოზიცია Z: </label>
-                 <input type='number' value = {yPosition} onChange={handleYPosition}/>
+                 <input type='number' value={modelSettings.yPosition} onChange={(e) => handlePosition('y', e.target.value)}/>
                  </div>
              </div>
           </Html>}
-         <mesh receiveShadow position-y={ - 1 } rotation-x={ - Math.PI * 0.5 } scale={ 10 }>
+         <mesh receiveShadow position-y={ - 1 } rotation-x={ - Math.PI * 0.5 } scale={ 15 }>
             <planeGeometry />
             <meshStandardMaterial  map = {tiles} />
            
